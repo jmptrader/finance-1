@@ -6,13 +6,18 @@ import (
 	"strconv"
 )
 
+const (
+	IRR_PERCENTAGE_UPPER_BOUND = 1.0
+	IRR_PERCENTAGE_STEP_PRECISION = 0.001
+)
+
 // IRR Calculates the internal rate of return of a series of periodic incomes (positive or negative).
 // The input is a map of float64 arrays keyed by period number. A given period can have multiple positive and/or
 // negative incomes.
 func IRR(periodicIncomes map[int][]float64) float64 {
 	var lowestNpv float64
 	var bestTestedIrr float64
-	for i := 0.0; i < 1.001; i = i + 0.001 {
+	for i := 0.0; i < IRR_PERCENTAGE_UPPER_BOUND; i = i + IRR_PERCENTAGE_STEP_PRECISION {
 		npv := netPresentValue(periodicIncomes, i)
 		if lowestNpv == 0 {
 			lowestNpv = npv
