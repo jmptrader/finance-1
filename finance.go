@@ -6,12 +6,14 @@ import (
 	"strconv"
 )
 
-// IRR (Internal Rate of Return) is the interest rate that makes the Net Present Value zero
-func IRR(yearlyPayments map[int][]float64) float64 {
+// IRR Calculates the internal rate of return of a series of periodic incomes (positive or negative).
+// The input is a map of float64 arrays keyed by period number. A given period can multiple positive and
+// negative incomes.
+func IRR(periodicIncomes map[int][]float64) float64 {
 	var lowestNpv float64
 	var bestTestedIrr float64
 	for i := 0.0; i < 1.001; i = i + 0.001 {
-		npv := netPresentValue(yearlyPayments, i)
+		npv := netPresentValue(periodicIncomes, i)
 		if lowestNpv == 0 {
 			lowestNpv = npv
 		}
@@ -23,8 +25,9 @@ func IRR(yearlyPayments map[int][]float64) float64 {
 	return bestTestedIrr
 }
 
-func presentValue(futureValue float64, interestRate float64, numYears int) float64 {
-	n := float64(numYears)
+// PresentValue calculates the present value for a given future value, interest rate, and number of periods.
+func PresentValue(futureValue float64, interestRate float64, numPeriods int) float64 {
+	n := float64(numPeriods)
 	pv := futureValue / math.Pow(1+interestRate, n)
 	return float64(roundTo2DecimalPlaces(pv))
 }
@@ -37,11 +40,11 @@ func roundTo2DecimalPlaces(value float64) float64 {
 	return roundedValue
 }
 
-func netPresentValue(yearlyPayments map[int][]float64, interestRate float64) float64 {
+func netPresentValue(periodicIncomes map[int][]float64, interestRate float64) float64 {
 	var presentValues []float64
-	for year, value := range yearlyPayments {
+	for period, value := range periodicIncomes {
 		for _, v := range value {
-			pv := presentValue(v, interestRate, year)
+			pv := PresentValue(v, interestRate, period)
 			presentValues = append(presentValues, pv)
 		}
 	}
