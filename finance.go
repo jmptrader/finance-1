@@ -17,18 +17,18 @@ const (
 func IRR(periodicIncomes map[int][]float64) float64 {
 	var lowestNpv float64
 	var bestTestedIrr float64
-	isTrendingDownwards := false
+	hasTrendedDownwards := false
 	for i := 0.0; i < irrPercentageUpperBound; i = i + irrPercentageStepPrecision {
 		npv := netPresentValue(periodicIncomes, i)
 		if lowestNpv == 0 {
 			lowestNpv = npv
 		}
 		if math.Abs(npv) < math.Abs(lowestNpv) {
-			isTrendingDownwards = true
+			hasTrendedDownwards = true
 			lowestNpv = npv
 			bestTestedIrr = i
 		} else {
-			if isTrendingDownwards {
+			if hasTrendedDownwards {
 				break
 			}
 		}
