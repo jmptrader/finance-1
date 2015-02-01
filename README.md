@@ -1,4 +1,4 @@
 finance
 ---
 
-A package to calculate Internal Rate of Return and Present Value.
+A Go package to calculate Internal Rate of Return and Present Value.
