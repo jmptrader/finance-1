@@ -7,7 +7,7 @@ import (
 )
 
 // IRR Calculates the internal rate of return of a series of periodic incomes (positive or negative).
-// The input is a map of float64 arrays keyed by period number. A given period can multiple positive and
+// The input is a map of float64 arrays keyed by period number. A given period can have multiple positive and/or
 // negative incomes.
 func IRR(periodicIncomes map[int][]float64) float64 {
 	var lowestNpv float64
