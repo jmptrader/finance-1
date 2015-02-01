@@ -10,7 +10,6 @@ import (
 func IRR(yearlyPayments map[int][]float64) float64 {
 	var lowestNpv float64
 	var bestTestedIrr float64
-
 	for i := 0.0; i < 1.001; i = i + 0.001 {
 		npv := netPresentValue(yearlyPayments, i)
 		if lowestNpv == 0 {
@@ -21,7 +20,6 @@ func IRR(yearlyPayments map[int][]float64) float64 {
 			bestTestedIrr = i
 		}
 	}
-
 	return bestTestedIrr
 }
 
