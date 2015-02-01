@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	IRR_PERCENTAGE_UPPER_BOUND = 1.0
-	IRR_PERCENTAGE_STEP_PRECISION = 0.001
+	irrPercentageUpperBound    = 1.0
+	irrPercentageStepPrecision = 0.001
 )
 
 // IRR Calculates the internal rate of return of a series of periodic incomes (positive or negative).
@@ -17,14 +17,20 @@ const (
 func IRR(periodicIncomes map[int][]float64) float64 {
 	var lowestNpv float64
 	var bestTestedIrr float64
-	for i := 0.0; i < IRR_PERCENTAGE_UPPER_BOUND; i = i + IRR_PERCENTAGE_STEP_PRECISION {
+	isTrendingDownwards := false
+	for i := 0.0; i < irrPercentageUpperBound; i = i + irrPercentageStepPrecision {
 		npv := netPresentValue(periodicIncomes, i)
 		if lowestNpv == 0 {
 			lowestNpv = npv
 		}
 		if math.Abs(npv) < math.Abs(lowestNpv) {
+			isTrendingDownwards = true
 			lowestNpv = npv
 			bestTestedIrr = i
+		} else {
+			if isTrendingDownwards {
+				break
+			}
 		}
 	}
 	return bestTestedIrr
