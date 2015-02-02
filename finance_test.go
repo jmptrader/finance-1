@@ -58,7 +58,8 @@ func TestCompoundInterest(t *testing.T) {
 }
 
 func compareFloatToPrecision(t *testing.T, result float64, correctAnswer float64) {
-	if math.Remainder(correctAnswer, result) >= ExpectedPrecision {
+	absRemainder := math.Abs(math.Remainder(correctAnswer, result))
+	if absRemainder >= ExpectedPrecision {
 		t.Errorf("Expected %v, got %v", correctAnswer, result)
 	}
 }
