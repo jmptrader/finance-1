@@ -5,7 +5,10 @@ import (
 	"testing"
 )
 
-const ExpectedPrecision = 0.01
+const (
+	TwoPositionPrecision   = 0.005
+	ThreePositionPrecision = 0.0005
+)
 
 func TestIRR(t *testing.T) {
 	payments1 := map[int][]float64{
@@ -36,30 +39,30 @@ func TestIRR(t *testing.T) {
 	result2 := IRR(payments2)
 	result3 := IRR(payments3)
 
-	compareFloatToPrecision(t, result1, answer1)
-	compareFloatToPrecision(t, result2, answer2)
-	compareFloatToPrecision(t, result3, answer3)
+	compareFloatToPrecision(t, result1, answer1, ThreePositionPrecision)
+	compareFloatToPrecision(t, result2, answer2, ThreePositionPrecision)
+	compareFloatToPrecision(t, result3, answer3, ThreePositionPrecision)
 }
 
 func TestPresentValue(t *testing.T) {
 	result1 := PresentValue(40000.00, 0.023, 4)
 	correctAnswer1 := 36522.24
-	compareFloatToPrecision(t, result1, correctAnswer1)
+	compareFloatToPrecision(t, result1, correctAnswer1, TwoPositionPrecision)
 
 	result2 := PresentValue(489000.13, 0.053, 43)
 	correctAnswer2 := 53074.88
-	compareFloatToPrecision(t, result2, correctAnswer2)
+	compareFloatToPrecision(t, result2, correctAnswer2, TwoPositionPrecision)
 }
 
 func TestCompoundInterest(t *testing.T) {
 	result := CompoundInterest(1500.00, 0.043, 6, 4)
 	correctAnswer := 1938.84
-	compareFloatToPrecision(t, result, correctAnswer)
+	compareFloatToPrecision(t, result, correctAnswer, TwoPositionPrecision)
 }
 
-func compareFloatToPrecision(t *testing.T, result float64, correctAnswer float64) {
+func compareFloatToPrecision(t *testing.T, result float64, correctAnswer float64, precision float64) {
 	absRemainder := math.Abs(math.Remainder(correctAnswer, result))
-	if absRemainder >= ExpectedPrecision {
+	if absRemainder > precision {
 		t.Errorf("Expected %v, got %v", correctAnswer, result)
 	}
 }
