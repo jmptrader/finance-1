@@ -39,7 +39,7 @@ func PresentValue(futureValue float64, interestRate float64, numPeriods int) flo
 	return pv
 }
 
-// CompoundInterest takes a principle amount, a nominal interest rate, and a number of periods,
+// CompoundInterest takes a principle amount, a nominal interest rate, a number of periods,
 // and a number of compounding times per period and returns the compounded value.
 func CompoundInterest(principleAmount float64, nominalInterestRate float64, numPeriods int, numTimesCompoundedPerPeriod int) float64 {
 	exponent := float64(numTimesCompoundedPerPeriod * numPeriods)
