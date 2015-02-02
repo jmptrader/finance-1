@@ -1,9 +1,11 @@
 package finance
 
 import (
-	"fmt"
+	"math"
 	"testing"
 )
+
+const ExpectedPrecision = 0.01
 
 func TestIRR(t *testing.T) {
 	payments1 := map[int][]float64{
@@ -26,42 +28,37 @@ func TestIRR(t *testing.T) {
 		4: []float64{10000.00},
 	}
 
-	answer1 := "0.124"
-	answer2 := "0.334"
-	answer3 := "0.243"
+	answer1 := 0.124
+	answer2 := 0.334
+	answer3 := 0.243
 
-	runIrrTest(t, payments1, answer1)
-	runIrrTest(t, payments2, answer2)
-	runIrrTest(t, payments3, answer3)
-}
+	result1 := IRR(payments1)
+	result2 := IRR(payments2)
+	result3 := IRR(payments3)
 
-func runIrrTest(t *testing.T, payments map[int][]float64, correctAnswer string) {
-	result := IRR(payments)
-	if fmt.Sprintf("%.3f", result) != correctAnswer {
-		t.Errorf("Expected %v, got %v", correctAnswer, result)
-	}
+	compareFloatToPrecision(t, result1, answer1)
+	compareFloatToPrecision(t, result2, answer2)
+	compareFloatToPrecision(t, result3, answer3)
 }
 
 func TestPresentValue(t *testing.T) {
 	result1 := PresentValue(40000.00, 0.023, 4)
-	correctAnswer1 := "36522.24"
-	runPVTest(t, result1, correctAnswer1)
+	correctAnswer1 := 36522.24
+	compareFloatToPrecision(t, result1, correctAnswer1)
 
 	result2 := PresentValue(489000.13, 0.053, 43)
-	correctAnswer2 := "53074.88"
-	runPVTest(t, result2, correctAnswer2)
-}
-
-func runPVTest(t *testing.T, result float64, correctAnswer string) {
-	if fmt.Sprintf("%.2f", result) != correctAnswer {
-		t.Errorf("Expected %v, got %v", correctAnswer, result)
-	}
+	correctAnswer2 := 53074.88
+	compareFloatToPrecision(t, result2, correctAnswer2)
 }
 
 func TestCompoundInterest(t *testing.T) {
 	result := CompoundInterest(1500.00, 0.043, 6, 4)
-	correctAnswer := "1938.84"
-	if fmt.Sprintf("%.2f", result) != correctAnswer {
+	correctAnswer := 1938.84
+	compareFloatToPrecision(t, result, correctAnswer)
+}
+
+func compareFloatToPrecision(t *testing.T, result float64, correctAnswer float64) {
+	if math.Remainder(correctAnswer, result) >= ExpectedPrecision {
 		t.Errorf("Expected %v, got %v", correctAnswer, result)
 	}
 }
