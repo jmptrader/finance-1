@@ -13,23 +13,35 @@ const (
 func IRR(periodicIncomes map[int][]float64) float64 {
 	var lowestNpv float64
 	var bestTestedIrr float64
-	hasTrendedDownwards := false
+	numChans := 0
+	c := make(chan npvResult)
 	for i := 0.0; i < irrPercentageUpperBound; i = i + irrPercentageStepPrecision {
-		npv := NetPresentValue(periodicIncomes, i)
+		numChans++
+		go calculateNPV(c, periodicIncomes, i)
+	}
+
+	for i := 0; i < numChans; i++ {
+		result := <-c
 		if lowestNpv == 0 {
-			lowestNpv = npv
+			lowestNpv = result.npv
 		}
-		if math.Abs(npv) < math.Abs(lowestNpv) {
-			hasTrendedDownwards = true
-			lowestNpv = npv
-			bestTestedIrr = i
-		} else {
-			if hasTrendedDownwards {
-				break
-			}
+		if math.Abs(result.npv) < math.Abs(lowestNpv) {
+			lowestNpv = result.npv
+			bestTestedIrr = result.interestRate
 		}
 	}
 	return bestTestedIrr
+}
+
+type npvResult struct {
+	npv          float64
+	interestRate float64
+}
+
+func calculateNPV(c chan<- npvResult, periodicIncomes map[int][]float64, percentAttempt float64) {
+	npv := NetPresentValue(periodicIncomes, percentAttempt)
+	c <- npvResult{npv: npv, interestRate: percentAttempt}
+	return
 }
 
 // PresentValue calculates the present value for a given future value, interest rate, and number of periods.
