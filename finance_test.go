@@ -57,3 +57,11 @@ func runPVTest(t *testing.T, result float64, correctAnswer string) {
 		t.Errorf("Expected %v, got %v", correctAnswer, result)
 	}
 }
+
+func TestCompoundInterest(t *testing.T) {
+	result := CompoundInterest(1500.00, 0.043, 6, 4)
+	correctAnswer := "1938.84"
+	if fmt.Sprintf("%.2f", result) != correctAnswer {
+		t.Errorf("Expected %v, got %v", correctAnswer, result)
+	}
+}

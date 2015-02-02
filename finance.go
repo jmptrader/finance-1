@@ -1,10 +1,6 @@
 package finance
 
-import (
-	"fmt"
-	"math"
-	"strconv"
-)
+import "math"
 
 const (
 	irrPercentageUpperBound    = 1.0
@@ -40,15 +36,15 @@ func IRR(periodicIncomes map[int][]float64) float64 {
 func PresentValue(futureValue float64, interestRate float64, numPeriods int) float64 {
 	n := float64(numPeriods)
 	pv := futureValue / math.Pow(1+interestRate, n)
-	return float64(roundTo2DecimalPlaces(pv))
+	return pv
 }
 
-func roundTo2DecimalPlaces(value float64) float64 {
-	roundedValue, err := strconv.ParseFloat(fmt.Sprintf("%.2f", value), 32)
-	if err != nil {
-		panic(err)
-	}
-	return roundedValue
+// CompoundInterest takes a principle amount, a nominal interest rate, and a number of periods
+// and returns the compounded value
+func CompoundInterest(principleAmount float64, nominalInterestRate float64, numPeriods int, numTimesCompoundedPerPeriod int) float64 {
+	exponent := float64(numTimesCompoundedPerPeriod * numPeriods)
+	s := principleAmount * math.Pow(1+nominalInterestRate/float64(numTimesCompoundedPerPeriod), exponent)
+	return s
 }
 
 func netPresentValue(periodicIncomes map[int][]float64, interestRate float64) float64 {
