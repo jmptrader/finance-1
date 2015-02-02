@@ -66,3 +66,21 @@ func compareFloatToPrecision(t *testing.T, result float64, correctAnswer float64
 		t.Errorf("Expected %v, got %v", correctAnswer, result)
 	}
 }
+
+func TestNetPresentValue(t *testing.T) {
+	payments1 := map[int][]float64{
+		0: []float64{-500.00},
+		1: []float64{570.00},
+	}
+	correctAnswer1 := 18.18
+	result1 := NetPresentValue(payments1, 0.1)
+	compareFloatToPrecision(t, result1, correctAnswer1, TwoPositionPrecision)
+
+	payments2 := map[int][]float64{
+		0: []float64{-500.00},
+		1: []float64{570.00},
+	}
+	correctAnswer2 := -4.35
+	result2 := NetPresentValue(payments2, 0.15)
+	compareFloatToPrecision(t, result2, correctAnswer2, TwoPositionPrecision)
+}

@@ -15,7 +15,7 @@ func IRR(periodicIncomes map[int][]float64) float64 {
 	var bestTestedIrr float64
 	hasTrendedDownwards := false
 	for i := 0.0; i < irrPercentageUpperBound; i = i + irrPercentageStepPrecision {
-		npv := netPresentValue(periodicIncomes, i)
+		npv := NetPresentValue(periodicIncomes, i)
 		if lowestNpv == 0 {
 			lowestNpv = npv
 		}
@@ -47,7 +47,8 @@ func CompoundInterest(principleAmount float64, nominalInterestRate float64, numP
 	return s
 }
 
-func netPresentValue(periodicIncomes map[int][]float64, interestRate float64) float64 {
+// NetPresentValue takes periodic incomes (in the same format as IRR) and a nominal interest rate.
+func NetPresentValue(periodicIncomes map[int][]float64, interestRate float64) float64 {
 	var presentValues []float64
 	for period, value := range periodicIncomes {
 		for _, v := range value {
